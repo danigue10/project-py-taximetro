@@ -1,0 +1,26 @@
+[
+    {
+        "carrera": 1,
+        "fecha": "2026-11-16 15:37:55",
+        "duracion_total_segundos": 36.92,
+        "tiempo_parado_segundos": 30.13,
+        "tiempo_movimiento_segundos": 6.79,
+        "total_euros": 0.94
+    },
+    {
+        "carrera": 1,
+        "fecha": "2026-11-16 17:21:11",
+        "duracion_total_segundos": 18.5,
+        "tiempo_parado_segundos": 10.04,
+        "tiempo_movimiento_segundos": 8.46,
+        "total_euros": 0.62
+    },
+    {
+        "carrera": 2,
+        "fecha": "2026-11-16 17:24:10",
+        "duracion_total_segundos": 9.18,
+        "tiempo_parado_segundos": 9.18,
+        "tiempo_movimiento_segundos": 0.0,
+        "total_euros": 0.18
+    }
+]

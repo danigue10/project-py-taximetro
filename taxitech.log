@@ -1,0 +1,32 @@
+2026-11-16 15:00:45,653 - INFO - Aplicación de taxímetro iniciada.
+2026-11-16 15:00:51,576 - WARNING - Comando de menú principal inválido: M
+2026-11-16 15:01:02,680 - WARNING - Comando de menú principal inválido: P
+2026-11-16 15:01:09,963 - WARNING - Comando de menú principal inválido: F
+2026-11-16 15:01:15,277 - INFO - Aplicación cerrada por el usuario.
+2026-11-16 15:12:37,303 - INFO - Aplicación de taxímetro iniciada.
+2026-11-16 15:12:39,840 - WARNING - Comando de menú principal inválido: M
+2026-11-16 15:12:46,866 - WARNING - Comando de menú principal inválido: P
+2026-11-16 15:12:55,075 - INFO - Iniciando carrera #1
+2026-11-16 15:13:05,046 - INFO - Carrera #1: Cambio de estado a MOVIMIENTO
+2026-11-16 15:13:11,723 - INFO - Carrera #1: Cambio de estado a PARADO
+2026-11-16 15:13:16,946 - INFO - Carrera #1 finalizada. Duración: 21.86s, Total: 0.64 €
+2026-11-16 15:13:20,230 - INFO - Aplicación cerrada por el usuario.
+2026-11-16 15:34:05,426 - INFO - Aplicación de taxímetro iniciada.
+2026-11-16 15:37:18,840 - INFO - Iniciando carrera #1
+2026-11-16 15:37:36,989 - INFO - Carrera #1: Cambio de estado a MOVIMIENTO
+2026-11-16 15:37:43,781 - INFO - Carrera #1: Cambio de estado a PARADO
+2026-11-16 15:37:55,767 - INFO - Carrera #1 finalizada. Duración: 36.92s, Total: 0.94 €
+2026-11-16 15:37:55,771 - INFO - Carrera #1 guardada en el histórico persistente.
+2026-11-16 17:20:44,765 - INFO - Aplicación cerrada por el usuario.
+2026-11-16 17:20:48,166 - INFO - Tarifas cargadas correctamente desde config.json
+2026-11-16 17:20:48,167 - INFO - Aplicación de taxímetro iniciada.
+2026-11-16 17:20:53,432 - INFO - Iniciando carrera #1
+2026-11-16 17:20:59,851 - INFO - Carrera #1: Cambio de estado a MOVIMIENTO
+2026-11-16 17:21:08,314 - INFO - Carrera #1: Cambio de estado a PARADO
+2026-11-16 17:21:11,935 - INFO - Carrera #1 finalizada. Duración: 18.50s, Total: 0.62 €
+2026-11-16 17:21:11,938 - INFO - Carrera #1 guardada en el histórico persistente.
+2026-11-16 17:24:01,412 - INFO - Iniciando carrera #2
+2026-11-16 17:24:05,322 - WARNING - Carrera #2: Comando no reconocido introducido: Q
+2026-11-16 17:24:10,601 - INFO - Carrera #2 finalizada. Duración: 9.18s, Total: 0.18 €
+2026-11-16 17:24:10,638 - INFO - Carrera #2 guardada en el histórico persistente.
+2026-11-16 17:24:12,447 - INFO - Aplicación cerrada por el usuario.
