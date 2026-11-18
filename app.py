@@ -1,32 +1,60 @@
 import streamlit as st
 import time
-import json
-import os
 from datetime import datetime
+import requests
 
-st.set_page_config(page_title="TaxiTech Systems", page_icon="🚖")
+st.set_page_config(page_title="TaxiTech Systems (Producción)", page_icon="🚖", layout="wide")
 
-HISTORY_FILE = "historial_carreras.json"
+# URL base de nuestra API REST en FastAPI
+API_BASE_URL = "http://127.0.0.1:8000"
 
-def guardar_carrera(datos_carrera):
-    historial = []
-    if os.path.exists(HISTORY_FILE):
-        try:
-            with open(HISTORY_FILE, "r", encoding="utf-8") as f:
-                historial = json.load(f)
-        except json.JSONDecodeError:
-            historial = []
-    historial.append(datos_carrera)
-    with open(HISTORY_FILE, "w", encoding="utf-8") as f:
-        json.dump(historial, f, indent=4, ensure_ascii=False)
+# --- Funciones de comunicación con la API ---
 
-st.title("🚖 TaxiTech - Sistema de Taxímetro (Madrid)")
+def api_iniciar_carrera(estado_inicial):
+    try:
+        response = requests.post(f"{API_BASE_URL}/carreras/iniciar", json={"estado_inicial": estado_inicial})
+        if response.status_code == 200:
+            return response.json().get("id_carrera")
+    except requests.exceptions.ConnectionError:
+        st.error("⚠️ Error de conexión con la API REST.")
+    return None
+
+def api_actualizar_estado(carrera_id, estado_actual):
+    try:
+        requests.put(f"{API_BASE_URL}/carreras/{carrera_id}/estado", json={"estado_actual": estado_actual})
+    except requests.exceptions.ConnectionError:
+        pass
+
+def api_finalizar_carrera(carrera_id, duracion, importe):
+    try:
+        payload = {"duracion_segundos": duracion, "importe_eur": importe}
+        response = requests.post(f"{API_BASE_URL}/carreras/{carrera_id}/finalizar", json=payload)
+        if response.status_code == 200:
+            return response.json()
+    except requests.exceptions.ConnectionError:
+        st.error("⚠️ Error de conexión al finalizar la carrera.")
+    return None
+
+def api_obtener_historial():
+    try:
+        response = requests.get(f"{API_BASE_URL}/carreras")
+        if response.status_code == 200:
+            return response.json()
+    except requests.exceptions.ConnectionError:
+        return []
+    return []
+
+# --- Interfaz Gráfica con Streamlit ---
+
+st.title("🚖 TaxiTech - Sistema de Taxímetro (Modo Producción)")
 
 # Inicializar estados de sesión
 if "autenticado" not in st.session_state:
     st.session_state.autenticado = False
 if "carrera_activa" not in st.session_state:
     st.session_state.carrera_activa = False
+if "carrera_id" not in st.session_state:
+    st.session_state.carrera_id = None
 if "estado_movimiento" not in st.session_state:
     st.session_state.estado_movimiento = "parado"
 if "tiempo_inicio" not in st.session_state:
@@ -36,7 +64,7 @@ if "ultima_carrera" not in st.session_state:
 
 # 1. Pantalla de Login (US-08)
 if not st.session_state.autenticado:
-    st.subheader("🔐 Acceso de Conductor")
+    st.subheader("🔐 Acceso de Conductor / Gestor")
     password = st.text_input("Introduce la contraseña:", type="password")
     
     if st.button("Iniciar Sesión"):
@@ -50,26 +78,26 @@ else:
     # Barra superior
     col_info, col_btn = st.columns([3, 1])
     with col_info:
-        st.success("✅ Sesión iniciada como Conductor Autorizado")
+        st.success("✅ Sesión iniciada - Conectado a Backend FastAPI & SQLite")
     with col_btn:
         if st.button("Cerrar Sesión"):
             st.session_state.autenticado = False
             st.session_state.carrera_activa = False
+            st.session_state.carrera_id = None
             st.session_state.ultima_carrera = None
             st.rerun()
 
     st.markdown("---")
 
-    # 2. Pantalla Principal (Libre o En Curso)
+    # 2. Pantalla Principal
     if not st.session_state.carrera_activa:
         st.subheader("🚗 Estado: Libre / Preparado")
         
-        # Si hay una carrera reciente, mostramos su ticket en pantalla
         if st.session_state.ultima_carrera:
-            st.success("🏁 ¡Última carrera cobrada con éxito!")
+            st.success("🏁 ¡Carrera cobrada y registrada en la Base de Datos!")
             ticket = st.session_state.ultima_carrera
             st.info(f"""
-            **🧾 TICKET DE CARRERA**
+            **🧾 TICKET DE CARRERA (ID: {ticket.get('id')})**
             - **Fecha:** {ticket['fecha']}
             - **Duración:** {ticket['duracion_segundos']} segundos
             - **Total Cobrado:** **{ticket['importe_eur']} €**
@@ -77,11 +105,37 @@ else:
             st.markdown("---")
 
         if st.button("🟢 Iniciar Nueva Carrera", type="primary", use_container_width=True):
-            st.session_state.carrera_activa = True
-            st.session_state.tiempo_inicio = time.time()
-            st.session_state.estado_movimiento = "parado"
-            st.session_state.ultima_carrera = None # Limpiamos el ticket anterior al iniciar una nueva
-            st.rerun()
+            nuevo_id = api_iniciar_carrera("parado")
+            if nuevo_id:
+                st.session_state.carrera_id = nuevo_id
+                st.session_state.carrera_activa = True
+                st.session_state.tiempo_inicio = time.time()
+                st.session_state.estado_movimiento = "parado"
+                st.session_state.ultima_carrera = None
+                st.rerun()
+            else:
+                st.error("No se pudo iniciar la carrera con la API.")
+
+        # --- PANEL WEB DEL GESTOR DE FLOTA (Requisito 3) ---
+        st.markdown("---")
+        st.subheader("📊 Panel de Flota: Historial Global de Operaciones")
+        
+        historial_flota = api_obtener_historial()
+        if historial_flota:
+            st.dataframe(
+                historial_flota,
+                column_config={
+                    "id": "ID",
+                    "fecha": "Fecha y Hora",
+                    "duracion_segundos": "Duración (s)",
+                    "importe_eur": "Importe (€)",
+                    "estado_final": "Estado"
+                },
+                use_container_width=True
+            )
+        else:
+            st.info("No hay carreras completadas registradas en la base de datos todavía.")
+
     else:
         st.subheader("⏱️ Carrera en Curso")
         
@@ -89,37 +143,33 @@ else:
         with col1:
             if st.button("🛑 Parado (<20 km/h) - 0.02€/s", use_container_width=True):
                 st.session_state.estado_movimiento = "parado"
+                api_actualizar_estado(st.session_state.carrera_id, "parado")
         with col2:
             if st.button("🚀 En Movimiento - 0.05€/s", use_container_width=True):
                 st.session_state.estado_movimiento = "movimiento"
+                api_actualizar_estado(st.session_state.carrera_id, "movimiento")
 
         if st.session_state.estado_movimiento == "parado":
             st.warning("🛑 Vehículo en estado: **PARADO (<20 km/h)** -> Tarifa: 0.02 €/s")
         else:
             st.info("🚀 Vehículo en estado: **EN MOVIMIENTO** -> Tarifa: 0.05 €/s")
 
-        # Cálculo en tiempo real
         duracion_actual = time.time() - st.session_state.tiempo_inicio
         tarifa = 0.02 if st.session_state.estado_movimiento == "parado" else 0.05
         coste_actual = round(duracion_actual * tarifa, 2)
 
         st.metric(label="Importe Actual Estimado", value=f"{coste_actual:.2f} €", delta=f"{duracion_actual:.1f} s transcurridos")
 
-        # Botón Finalizar
         if st.button("🏁 Finalizar y Cobrar Carrera", type="secondary", use_container_width=True):
-            datos_carrera = {
-                "fecha": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                "duracion_segundos": round(duracion_actual, 2),
-                "importe_eur": coste_actual
-            }
-            guardar_carrera(datos_carrera)
+            duracion_final = round(duracion_actual, 2)
+            resultado_carrera = api_finalizar_carrera(st.session_state.carrera_id, duracion_final, coste_actual)
             
-            # Guardamos en la sesión para mostrar el ticket en la pantalla principal
-            st.session_state.ultima_carrera = datos_carrera
-            st.session_state.carrera_activa = False
-            st.balloons()
-            st.rerun()
+            if resultado_carrera:
+                st.session_state.ultima_carrera = resultado_carrera
+                st.session_state.carrera_activa = False
+                st.session_state.carrera_id = None
+                st.balloons()
+                st.rerun()
             
-        # Refresco automático de la pantalla cada segundo mientras dura la carrera
         time.sleep(1)
         st.rerun()

@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  taxitech-api:
+    build: .
+    container_name: taxitech_api_service
+    ports:
+      - "8000:8000"
+    command: uvicorn main:app --host 0.0.0.0 --port 8000
+    volumes:
+      - .:/app  # Mantiene los datos de SQLite persistentes en la máquina host
+
+  taxitech-web:
+    build: .
+    container_name: taxitech_web_service
+    ports:
+      - "8501:8501"
+    command: streamlit run app.py --server.address=0.0.0.0 --server.port=8501
+    depends_on:
+      - taxitech-api
+    volumes:
+      - .:/app

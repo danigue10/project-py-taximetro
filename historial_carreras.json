@@ -22,5 +22,45 @@
         "tiempo_parado_segundos": 9.18,
         "tiempo_movimiento_segundos": 0.0,
         "total_euros": 0.18
+    },
+    {
+        "fecha": "2026-11-17 09:46:30",
+        "duracion_segundos": 17.29,
+        "importe_eur": 0.86
+    },
+    {
+        "fecha": "2026-11-17 09:54:44",
+        "duracion_segundos": 25.16,
+        "importe_eur": 1.26
+    },
+    {
+        "fecha": "2026-11-17 09:55:01",
+        "duracion_segundos": 9.28,
+        "importe_eur": 0.46
+    },
+    {
+        "fecha": "2026-11-17 09:55:48",
+        "duracion_segundos": 5.44,
+        "importe_eur": 0.11
+    },
+    {
+        "fecha": "2026-11-17 10:05:41",
+        "duracion_segundos": 19.43,
+        "importe_eur": 0.97
+    },
+    {
+        "fecha": "2026-11-17 12:57:26",
+        "duracion_segundos": 27.59,
+        "importe_eur": 1.38
+    },
+    {
+        "fecha": "2026-11-17 15:05:15",
+        "duracion_segundos": 20.05,
+        "importe_eur": 1.0
+    },
+    {
+        "fecha": "2026-11-17 15:14:46",
+        "duracion_segundos": 13.3,
+        "importe_eur": 0.67
     }
 ]
