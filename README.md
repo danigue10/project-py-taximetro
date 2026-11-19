@@ -1,197 +1,74 @@
-<img width="11520" height="3456" alt="Copia de Banner notebooks" src="https://github.com/user-attachments/assets/1c187a02-2294-4f4b-ba84-63766c051a15" />
+# 🚕 TaxiTech Solutions SL — Taxímetro Digital (`TTX-247`)
 
-# 🚕 TaxiTech Solutions — Sistema de Taxímetro Digital
-
-<div align="center">
-
-![Python](https://img.shields.io/badge/Python-3.10%2B-blue?logo=python&logoColor=white)
-![Estado](https://img.shields.io/badge/Estado-En%20desarrollo-yellow)
-![Sprint](https://img.shields.io/badge/Sprint-1-orange)
-![Prioridad](https://img.shields.io/badge/Prioridad-Alta-red)
-
-</div>
+> **Autor:** Daniel Zamorano García  
+> **Formación:** Bootcamp de Inteligencia Artificial — Factoría F5  
+> **Cliente / Unidad:** TaxiTech Solutions SL (`TTX-247`)
+> **Fecha de entrega:** 19 de noviembre de 2026 
+> **Repositorio:** [https://github.com/danigue10/project-py-taximetro](https://github.com/danigue10/project-py-taximetro)
+> **Tablero Kanban:** [https://github.com/users/danigue10/projects/1/views/1](https://github.com/users/danigue10/projects/1/views/1)
 
 ---
 
-> **Proyecto:** `TTX-247` — Modernización del sistema de facturación en flota
+## 1. Contexto y Propósito del Proyecto
 
-> **Cliente:** TaxiTech Solutions S.L. *(empresa de gestión de flotas de taxi, Madrid)*
+El proyecto responde a la necesidad de digitalizar el cálculo de tarifas de un servicio de taxi urbano en Madrid mediante una solución fiable, transparente y fácil de operar en cabina. El sistema contabiliza el tiempo transcurrido en cada estado del trayecto y aplica de forma exacta dos tarifas base por segundo:
 
-> **Equipo asignado:** Backend Squad — Nuevas incorporaciones
+| Estado del trayecto | Tarifa por segundo | Equivalencia por minuto |
+| :--- | :---: | :---: |
+| **Vehículo detenido (espera)** | `0,02 €/s` | `1,20 €/min` |
+| **Vehículo en movimiento (en ruta)** | `0,05 €/s` | `3,00 €/min` |
 
-> **Deadline:** Una semana a partir de la fecha de inicio del proyecto.
-
----
-
-## 📩 Contexto del Encargo
-
-El equipo de operaciones de **TaxiTech Solutions** lleva desde 2018 usando taxímetros físicos de la marca Hale modelo T200. El fabricante dejó de dar soporte en 2023 y los dispositivos están empezando a fallar en flota.
-
-La dirección ha tomado la decisión de **migrar a un sistema 100% software** antes de Q3 2025. El CTO ha abierto este proyecto piloto para validar el concepto con un **prototipo funcional** antes de comprometer presupuesto con un proveedor externo.
-
-Tu equipo ha sido asignado para desarrollar el prototipo.
+Más allá del núcleo funcional inicial en consola (CLI), la solución se ha estructurado de forma incremental hasta incorporar una interfaz web interactiva para el conductor, una API REST documentada y persistencia relacional en base de datos.
 
 ---
 
-## 🗣️ Briefing del Cliente
+## 2. Planificación Ágil y Priorización MoSCoW
 
-> *"Necesitamos algo que los taxistas puedan arrancar al inicio del turno y que calcule lo que le cuesta al pasajero en tiempo real. Cuando el taxi está parado en un semáforo, el contador sigue corriendo pero más despacio. En marcha, corre más rápido. Al llegar al destino, el taxista pulsa un botón, sale el total, y listo. Nos gustaría también poder ver un histórico de carreras del día. Si puede tener contraseña para que no lo toquen los pasajeros, mejor. Y si en el futuro se puede ver desde el móvil o una tablet en el taxi, perfecto."*
-> — Director de Operaciones, TaxiTech Solutions
+El desarrollo se organizó mediante un tablero Kanban aplicando el método MoSCoW para asegurar primero un Producto Mínimo Viable (MVP) plenamente operativo antes de abordar mejoras complementarias:
 
-**Tarifas vigentes (Zona EMT Madrid, junio 2025):**
-- Taxi **parado o velocidad < 20 km/h**: `0.02 €/segundo`
-- Taxi **en movimiento**: `0.05 €/segundo`
-
----
-
-## 📋 Historias de Usuario
-
-El equipo de producto ha desglosado el briefing en las siguientes historias. Están priorizadas por el cliente usando MoSCoW.
-
-| ID | Historia | Prioridad |
-|----|----------|-----------|
-| US-01 | Como taxista, quiero iniciar una carrera con un solo comando para empezar a cobrar desde el momento de arranque | Must |
-| US-02 | Como taxista, quiero cambiar el estado entre "parado" y "en movimiento" para que la tarifa se ajuste | Must |
-| US-03 | Como taxista, quiero finalizar la carrera y ver el total en euros para cobrar al pasajero | Must |
-| US-04 | Como taxista, quiero poder iniciar otra carrera sin cerrar el programa para no perder tiempo entre servicios | Must |
-| US-05 | Como responsable de flota, quiero ver el histórico de carreras del día para cuadrar caja | Should |
-| US-06 | Como técnico, quiero que el sistema genere logs de operación para diagnosticar errores en producción | Should |
-| US-07 | Como técnico, quiero poder cambiar las tarifas en un fichero de configuración sin redeployar | Should |
-| US-08 | Como responsable de flota, quiero que el sistema requiera contraseña para protegerlo de manipulaciones | Could |
-| US-09 | Como taxista, quiero una interfaz visual con botones grandes para usarlo fácilmente con el móvil o tablet | Could |
+| Prioridad | Historia | Alcance y Estado de Implementación |
+| :--- | :--- | :--- |
+| **Must Have** | `US-01` MVP CLI<br>`US-02` Tarifas<br>`US-03` Logs<br>`US-04` Tests | Núcleo de cálculo en Python con cambio dinámico entre `0,02 €/s` y `0,05 €/s`, registro de eventos en archivo de log, persistencia inicial en JSON y pruebas unitarias automatizadas para validar los importes. |
+| **Should Have** | `US-05` Interfaz Web<br>`US-06` API y BBDD | Desarrollo de la interfaz visual para el conductor en Streamlit (`app.py`) con controles directos de inicio, cambio de estado, pausa y emisión de ticket final.<br>Implementación de endpoints REST con FastAPI (`main.py`) y base de datos SQLite con SQLAlchemy (`database.py`. |
+| **Could Have** | `US-07` Docker | Archivos `Dockerfile` y `docker-compose.yml` preparados en el repositorio. |
+| **Won't Have** | `US-08` GPS/TPV | Integración con GPS físico en tiempo real y pasarela de pago con tarjeta (TPV), descartadas conscientemente en esta fase para proteger la estabilidad del MVP. |
 
 ---
 
-## 📊 Fases de Entrega
+## 3. Arquitectura del Sistema y Capas
 
-El proyecto se divide en **4 fases incrementales**. Cada fase es un entregable autónomo y funcional.
+Siguiendo el principio de separación de responsabilidades, el proyecto divide la lógica de presentación, los servicios web y el almacenamiento de datos en módulos independientes:
 
----
-
-### 🟢 Fase 1 — MVP Funcional (US-01 a US-04)
-
-El primer entregable es un CLI operativo que cubra el flujo completo de una carrera. El cliente necesita validar la lógica de tarifas antes de avanzar con cualquier otra funcionalidad.
-
-El sistema debe arrancar desde terminal, presentar las instrucciones de uso, y permitir al conductor gestionar el estado del vehículo mediante comandos de teclado. La tarifa se acumula de forma continua en función del estado activo y el tiempo transcurrido. Al finalizar la carrera, el importe total se muestra en euros con dos decimales. El proceso no debe cerrarse entre carreras: el conductor necesita encadenar servicios sin interrupciones.
-
-**Requisitos funcionales:**
-
-- Al arrancar, el sistema debe explicar al conductor cómo usarlo sin necesidad de documentación externa
-- El conductor debe poder indicar en cada momento si el vehículo está parado o en movimiento
-- El importe se acumula de forma continua según el estado activo y el tiempo transcurrido, aplicando la tarifa correspondiente en cada tramo
-- Al cerrar la carrera, el sistema muestra el importe total a cobrar
-- El sistema debe permitir encadenar carreras de forma inmediata, sin interrupciones entre servicios
+| Capa / Archivo | Tecnología | Responsabilidad Técnica |
+| :--- | :--- | :--- |
+| **Interfaz de Conductor** (`app.py`) | Python · Streamlit | Panel operativo en tiempo real con cronómetro en vivo, conmutación entre espera y movimiento, cálculo acumulado y generación de resumen final de carrera. |
+| **Backend y API REST** (`main.py`) | FastAPI · Uvicorn | Exposición de endpoints HTTP para consulta y registro de trayectos, con validación de esquemas y documentación interactiva automática en Swagger (`/docs`). |
+| **Persistencia de Datos** (`database.py`) | SQLite · SQLAlchemy | Definición del modelo relacional y gestión de sesiones sobre la base de datos local `taxitech_prod.db` para conservar el historial de servicios. |
+| **Infraestructura** (`Dockerfile` / `docker-compose.yml`) | Docker | Definición declarativa del entorno y servicios preparada en el repositorio para despliegue aislado *(pendiente de ejecución local por compatibilidad con la versión de macOS)*. |
 
 ---
 
-### 🟡 Fase 2 — Observabilidad y Persistencia (US-05, US-06, US-07)
+## 4. Fundamentos de Programación Aplicados
 
-El cliente ha solicitado que el sistema sea auditable y que los datos sobrevivan al cierre de la aplicación. Esta fase añade trazabilidad operativa y persistencia de negocio.
+La implementación consolida los cuatro pilares fundamentales del desarrollo en Python aplicados a un caso real:
 
-El sistema debe registrar todos los eventos relevantes —arranque, cambios de estado, cierre de carrera, errores— en un log estructurado accesible para el equipo técnico. El historial de carreras debe escribirse en disco de forma incremental y estar disponible en la siguiente sesión sin intervención manual. Las tarifas deben poder modificarse mediante un fichero de configuración externo, sin necesidad de tocar el código ni redeployar.
-
-**Requisitos funcionales:**
-
-- El sistema debe registrar en todo momento qué está ocurriendo: arranque, cambios de estado del vehículo, cierre de carrera y cualquier error. Ese registro debe ser accesible para el equipo técnico sin necesidad de intervenir en el proceso en ejecución
-- Al finalizar cada carrera, los datos relevantes —fecha, duración e importe— deben quedar guardados de forma permanente y estar disponibles en sesiones posteriores sin ninguna acción manual
-- Las tarifas deben poder actualizarse sin modificar el código ni redeployar la aplicación
-- La lógica de cálculo de tarifas debe estar cubierta por tests automatizados
+* **Variables y Constantes:** Definición explícita de las tarifas base (`0.02` y `0.05`), identificadores de servicio y acumuladores dinámicos de segundos e importe total[.
+* **Estructuras Condicionales (`if / elif / else`):** Control de las transiciones de estado del taxímetro (iniciado, detenido en espera, circulando en ruta, pausado o finalizado) para determinar la tarifa aplicable en cada instante.
+* **Bucles y Gestión de Estado en Vivo:** Uso de `st.session_state` y cálculo diferencial de tiempo real en `app.py` para actualizar los contadores segundo a segundo sin pérdida de memoria entre refrescos.
+* **Descomposición de Problemas:** División de un sistema completo en piezas pequeñas y verificables: interfaz de usuario (`app.py`), lógica de API (`main.py`), persistencia relacional (`database.py`) y batería de pruebas unitarias.
 
 ---
 
-### 🟠 Fase 3 — Arquitectura y Experiencia de Usuario (US-08, US-09)
+## 5. Decisiones de Diseño (UI) y Calidad
 
-Con el MVP validado, el cliente quiere una versión del sistema que pueda mantenerse a largo plazo y que resulte usable para conductores con poca experiencia técnica. Esta fase implica una refactorización estructural y la incorporación de una interfaz gráfica.
-
-El código debe reorganizarse bajo un modelo orientado a objetos con responsabilidades claramente delimitadas entre componentes. El acceso al sistema debe protegerse mediante autenticación por contraseña, almacenada de forma segura. La interfaz gráfica debe ser funcional en una tablet montada en el vehículo: botones grandes, estado visible de un vistazo y contador actualizado en tiempo real sin que la interfaz se bloquee.
-
-**Requisitos funcionales:**
-
-- El código debe estar organizado de forma que cada componente tenga una responsabilidad clara y pueda modificarse o sustituirse sin afectar al resto del sistema
-- El acceso a la aplicación debe estar protegido por contraseña. Las credenciales deben almacenarse de forma segura: ningún valor sensible puede guardarse en texto plano
-- La interfaz gráfica debe ser funcional en una tablet montada en el vehículo: estado del taxi visible de un vistazo, importe actualizado en tiempo real e interacción táctil cómoda. La interfaz no debe bloquearse en ningún momento durante el uso
+* **Criterio de simplicidad operativa:** Durante el desarrollo se exploraron enriquecimientos visuales en la interfaz de usuario; sin embargo, añadir elementos decorativos innecesarios dificultaba la lectura rápida y comprometía la estabilidad en directo. Se decidió rectificar a tiempo y volver a una interfaz limpia y minimalista, priorizando la claridad visual y la fiabilidad funcional durante el uso.
+* **Control de versiones y aprendizaje guiado:** El desarrollo se apoyó en un flujo riguroso de control de versiones con Git y GitHub (`git status`, `git add`, `git commit`, `git push`), manteniendo un historial trazable de cada hito y utilizando herramientas de inteligencia artificial como apoyo pedagógico para comprender la lógica paso a paso y validar cada bloque de código.
 
 ---
 
-### 🔴 Fase 4 — Versión de Producción
+## 6. Conclusiones y Próximos Pasos
 
-Esta fase convierte el prototipo en un sistema desplegable. El cliente quiere poder instalar la aplicación en los vehículos de la flota sin dependencias manuales, y acceder al historial de operaciones desde cualquier dispositivo conectado a la red del taxi.
-
-El historial migra de fichero plano a base de datos relacional. La lógica de negocio se expone mediante una API REST que puede ser consumida tanto por la interfaz web incluida como por integraciones futuras. El sistema completo debe poder desplegarse con un único comando.
-
-**Requisitos funcionales:**
-
-- El historial de carreras debe almacenarse en una base de datos que garantice integridad y permita consultas estructuradas
-- La lógica de negocio debe exponerse a través de una API que permita iniciar carreras, cambiar su estado, finalizarlas y consultar el historial. Esta API debe poder ser consumida por cualquier cliente web o móvil en el futuro
-- El sistema debe incluir un panel web accesible desde el navegador para que el responsable de flota pueda consultar el historial sin instalar nada
-- El despliegue debe poder realizarse con un único comando, sin configuración manual del entorno. Los datos deben sobrevivir a reinicios del sistema
-
----
-
-## 🛠️ Restricciones Técnicas
-
-El lenguaje de desarrollo es **Python**. Más allá de eso, la elección de librerías, frameworks y herramientas queda en manos del equipo, que deberá justificar sus decisiones técnicas en la documentación del proyecto.
-
-Se requiere control de versiones con **Git y GitHub** desde el inicio. La gestión de tareas debe ser visible en un tablero **GitHub Projects** con una columna por fase.
-
----
-
-## 📦 Entregables por Fase
-
-Cada fase debe entregarse con:
-
-1. Repositorio de GitHub con el código fuente del proyecto
-2. Demo en directo
-3. Enlace al tablero Kanban actualizado 
-
-# TaxiTech Solutions SL — Taxímetro Digital (TTX-247)
-
-Proyecto desarrollado para el **Bootcamp de Inteligencia Artificial de Factoría F5** por **Daniel Zamorano García**.
-
-## Resumen del proyecto
-
-Aplicación de taxímetro digital diseñada para operar con las tarifas de Madrid:
-- **Detenido / en espera:** `0,02 €/s`
-- **En movimiento:** `0,05 €/s`
-
-El proyecto se ha construido de forma incremental —desde la lógica base y pruebas hasta la interfaz web, el backend y la persistencia—, priorizando la claridad, el orden en el código y la fiabilidad operativa.
-
-## Estructura y componentes principales
-
-- **`app.py`:** Interfaz de usuario en Streamlit con control de acceso para conductor/gestor, gestión del estado en vivo (`st.session_state`), cálculo de tarifas en tiempo real y emisión del ticket final.
-- **`main.py`:** API REST con FastAPI y documentación interactiva en Swagger.
-- **`database.py` (`taxitech_prod.db`):** Persistencia relacional con SQLite y SQLAlchemy.
-- **Pruebas y registro:** Pruebas unitarias y registro de logs de operación.
-- **Contenedores (`Dockerfile`, `docker-compose.yml`):** Archivos de configuración preparados en el repositorio para despliegue en contenedor (sin ejecución local en este equipo por compatibilidad con macOS).
-
-## Gestión y planificación (Kanban MoSCoW)
-
-El seguimiento de las historias de usuario (`US-01` a `US-09`) se gestiona en el tablero Kanban público de GitHub:
-
-- **Tablero Kanban:** [TaxiTech TTX-247 - Kanban MoSCoW](https://github.com/users/danigue10/projects/1/views/1)
-- **Estado actual:** Historias `US-01` a `US-08` completadas (incluyendo acceso protegido por contraseña en producción); `US-09` (interfaz visual adaptada / botones táctiles) queda en curso (*Diferida · Sprint 2*) para priorizar la estabilidad y sencillez de la interfaz.
-
-## Ejecución en local
-
-1. Instala las dependencias del entorno de Python.
-2. Inicia la interfaz de Streamlit:
-   ```bash
-   streamlit run app.py
-
-
-
-## 📚 Recursos
-
-### Documentación oficial de Python
-- [`time` — Python stdlib](https://docs.python.org/3/library/time.html)
-- [`logging` — Python stdlib](https://docs.python.org/3/library/logging.html)
-- [`unittest` — Python stdlib](https://docs.python.org/3/library/unittest.html)
-- [`tkinter` — GUI básica](https://docs.python.org/3/library/tkinter.html)
-
-### Guías de referencia
-- [Real Python — OOP en Python](https://realpython.com/python3-object-oriented-programming/)
-- [Real Python — Testing](https://realpython.com/pytest-python-testing/)
-- [Real Python — Logging](https://realpython.com/python-logging/)
+El proyecto ha permitido dar los primeros pasos prácticos en Python, arquitectura modular y control de versiones con GitHub, comprobando la importancia de afianzar primero una base técnica sólida antes de refinar la capa visual. Como evolución natural tras esta entrega, el sistema queda preparado para integrar autenticación de conductores, conexión directa en tiempo real entre el panel de Streamlit y los endpoints de FastAPI, y despliegue en contenedor.
 - [Conventional Commits](https://www.conventionalcommits.org/es/v1.0.0/) — formato de mensajes de commit
 
 ### Solución
