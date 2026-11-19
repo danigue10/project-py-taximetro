@@ -142,9 +142,15 @@ Cada fase debe entregarse con:
 
 1. Repositorio de GitHub con el código fuente del proyecto
 2. Demo en directo
-3. Enlace al tablero Kanban actualizado
+3. Enlace al tablero Kanban actualizado 
 
----
+## Tablero Kanban (MoSCoW)
+
+El seguimiento de historias de usuario (`US-01` a `US-09`) y el estado actual del proyecto se gestionan en el tablero Kanban público:
+- **Enlace al tablero en GitHub:** https://github.com/users/danigue10/projects/1/views/1
+- **Estado actual:** Historias `US-01` a `US-08` completadas (incluyendo control de acceso/contraseña en producción; `US-09` (interfaz visual adaptada / botones táctiles) queda en curso (*Diferida · Sprint 2*) para priorizar la estabilidad operativa.-> 
+
+
 
 ## 📚 Recursos
 
