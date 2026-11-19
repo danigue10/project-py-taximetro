@@ -71,5 +71,3 @@ La implementación consolida los cuatro pilares fundamentales del desarrollo en 
 El proyecto ha permitido dar los primeros pasos prácticos en Python, arquitectura modular y control de versiones con GitHub, comprobando la importancia de afianzar primero una base técnica sólida antes de refinar la capa visual. Como evolución natural tras esta entrega, el sistema queda preparado para integrar autenticación de conductores, conexión directa en tiempo real entre el panel de Streamlit y los endpoints de FastAPI, y despliegue en contenedor.
 - [Conventional Commits](https://www.conventionalcommits.org/es/v1.0.0/) — formato de mensajes de commit
 
-### Solución
-[Solución proyecto](https://github.com/Factoria-F5-madrid/stn-taximetro)
