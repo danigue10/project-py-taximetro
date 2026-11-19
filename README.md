@@ -144,11 +144,39 @@ Cada fase debe entregarse con:
 2. Demo en directo
 3. Enlace al tablero Kanban actualizado 
 
-## Tablero Kanban (MoSCoW)
+# TaxiTech Solutions SL — Taxímetro Digital (TTX-247)
 
-El seguimiento de historias de usuario (`US-01` a `US-09`) y el estado actual del proyecto se gestionan en el tablero Kanban público:
-- **Enlace al tablero en GitHub:** https://github.com/users/danigue10/projects/1/views/1
-- **Estado actual:** Historias `US-01` a `US-08` completadas (incluyendo control de acceso/contraseña en producción; `US-09` (interfaz visual adaptada / botones táctiles) queda en curso (*Diferida · Sprint 2*) para priorizar la estabilidad operativa.-> 
+Proyecto desarrollado para el **Bootcamp de Inteligencia Artificial de Factoría F5** por **Daniel Zamorano García**.
+
+## Resumen del proyecto
+
+Aplicación de taxímetro digital diseñada para operar con las tarifas de Madrid:
+- **Detenido / en espera:** `0,02 €/s`
+- **En movimiento:** `0,05 €/s`
+
+El proyecto se ha construido de forma incremental —desde la lógica base y pruebas hasta la interfaz web, el backend y la persistencia—, priorizando la claridad, el orden en el código y la fiabilidad operativa.
+
+## Estructura y componentes principales
+
+- **`app.py`:** Interfaz de usuario en Streamlit con control de acceso para conductor/gestor, gestión del estado en vivo (`st.session_state`), cálculo de tarifas en tiempo real y emisión del ticket final.
+- **`main.py`:** API REST con FastAPI y documentación interactiva en Swagger.
+- **`database.py` (`taxitech_prod.db`):** Persistencia relacional con SQLite y SQLAlchemy.
+- **Pruebas y registro:** Pruebas unitarias y registro de logs de operación.
+- **Contenedores (`Dockerfile`, `docker-compose.yml`):** Archivos de configuración preparados en el repositorio para despliegue en contenedor (sin ejecución local en este equipo por compatibilidad con macOS).
+
+## Gestión y planificación (Kanban MoSCoW)
+
+El seguimiento de las historias de usuario (`US-01` a `US-09`) se gestiona en el tablero Kanban público de GitHub:
+
+- **Tablero Kanban:** [TaxiTech TTX-247 - Kanban MoSCoW](https://github.com/users/danigue10/projects/1/views/1)
+- **Estado actual:** Historias `US-01` a `US-08` completadas (incluyendo acceso protegido por contraseña en producción); `US-09` (interfaz visual adaptada / botones táctiles) queda en curso (*Diferida · Sprint 2*) para priorizar la estabilidad y sencillez de la interfaz.
+
+## Ejecución en local
+
+1. Instala las dependencias del entorno de Python.
+2. Inicia la interfaz de Streamlit:
+   ```bash
+   streamlit run app.py
 
 
 
